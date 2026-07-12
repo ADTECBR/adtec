@@ -227,6 +227,19 @@ export function Contact() {
                   </svg>
                 )}
               </button>
+
+              <p className="text-center text-xs pt-1" style={{ color: 'var(--c-text-3)' }}>
+                {lang === 'pt' ? 'Prefere agendar um papo direto conosco?' : 'Prefer to schedule a call directly?'}{' '}
+                <a
+                  href="https://calendar.app.google/EjiwiyhQmJWkj9aK7"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline underline-offset-2 transition-opacity hover:opacity-70"
+                  style={{ color: '#1b9e4b' }}
+                >
+                  {lang === 'pt' ? 'Escolha um horário →' : 'Pick a time →'}
+                </a>
+              </p>
             </form>
           </motion.div>
         </div>
