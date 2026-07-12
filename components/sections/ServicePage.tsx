@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import type { ServiceContent } from '@/lib/services-content';
+import { useLanguage } from '@/components/ui/LanguageProvider';
 
 const colorMap = {
   green: { accent: '#1b9e4b', bg: 'rgba(27,158,75,0.06)',  border: 'rgba(27,158,75,0.2)',  glow: 'rgba(27,158,75,0.12)'  },
@@ -29,7 +30,29 @@ interface Props {
 }
 
 export function ServicePage({ service }: Props) {
+  const { lang } = useLanguage();
   const c = colorMap[service.color];
+
+  const loc = lang === 'en' && service.en ? service.en : null;
+
+  const badge        = loc?.badge        ?? service.badge;
+  const headline     = loc?.headline     ?? service.headline;
+  const intro        = loc?.intro        ?? service.intro;
+  const steps        = loc?.steps
+    ? service.steps.map((s, i) => ({ ...s, title: loc.steps![i]?.title ?? s.title, description: loc.steps![i]?.description ?? s.description }))
+    : service.steps;
+  const platforms    = loc?.platforms    ?? service.platforms;
+  const differentials = loc?.differentials ?? service.differentials;
+  const ctaLabel     = loc?.ctaLabel     ?? service.ctaLabel;
+
+  const ui = {
+    back:          lang === 'en' ? 'Services'                                                                      : 'Serviços',
+    howWeWork:     lang === 'en' ? 'How we work'                                                                   : 'Como trabalhamos',
+    platforms:     lang === 'en' ? 'Platforms'                                                                     : 'Plataformas',
+    whyAdtec:      lang === 'en' ? 'Why AD TEC?'                                                                   : 'Por que a AD TEC?',
+    ctaHeading:    lang === 'en' ? 'Ready to scale your results?'                                                  : 'Pronto para escalar seus resultados?',
+    ctaSubtext:    lang === 'en' ? 'Talk to our team and find out how AD TEC can accelerate your business growth.' : 'Fale com nosso time e descubra como a AD TEC pode acelerar o crescimento do seu negócio.',
+  };
 
   return (
     <div style={{ background: 'var(--c-bg)', minHeight: '100vh' }}>
@@ -54,7 +77,7 @@ export function ServicePage({ service }: Props) {
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
               <path d="M13 8H3M7 4l-4 4 4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
-            Serviços
+            {ui.back}
           </Link>
 
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}>
@@ -62,14 +85,14 @@ export function ServicePage({ service }: Props) {
               className="inline-block text-xs font-semibold uppercase tracking-widest mb-5 px-3 py-1 rounded-full"
               style={{ color: c.accent, background: c.bg, border: `1px solid ${c.border}` }}
             >
-              {service.badge}
+              {badge}
             </span>
 
             <h1 className="text-5xl md:text-6xl font-black leading-none mb-8" style={{ color: 'var(--c-text-1)' }}>
-              {service.headline}
+              {headline}
             </h1>
 
-            {service.intro.map((p, i) => (
+            {intro.map((p, i) => (
               <p key={i} className="text-lg leading-relaxed mb-4 max-w-2xl" style={{ color: 'var(--c-text-2)' }}>
                 {p}
               </p>
@@ -81,7 +104,7 @@ export function ServicePage({ service }: Props) {
                 className="inline-flex items-center gap-2 px-8 py-4 rounded-full text-sm font-semibold transition-opacity hover:opacity-90"
                 style={{ background: c.accent, color: '#fff' }}
               >
-                {service.ctaLabel}
+                {ctaLabel}
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                   <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
@@ -95,11 +118,11 @@ export function ServicePage({ service }: Props) {
       <section className="py-24" style={{ background: 'var(--c-bg)' }}>
         <div className="max-w-4xl mx-auto px-6">
           <motion.h2 {...fadeUp()} className="text-2xl md:text-3xl font-black mb-12" style={{ color: 'var(--c-text-1)' }}>
-            Como trabalhamos
+            {ui.howWeWork}
           </motion.h2>
 
           <div className="flex flex-col gap-5">
-            {service.steps.map((step, i) => (
+            {steps.map((step, i) => (
               <motion.div
                 key={step.number}
                 {...fadeLeft(i * 0.08)}
@@ -123,7 +146,7 @@ export function ServicePage({ service }: Props) {
       </section>
 
       {/* ── Plataformas ──────────────────────────────────────── */}
-      {service.platforms && service.platforms.length > 0 && (
+      {platforms && platforms.length > 0 && (
         <section className="py-24" style={{ background: 'var(--c-surface)' }}>
           <div
             className="absolute left-0 right-0 h-px"
@@ -131,11 +154,11 @@ export function ServicePage({ service }: Props) {
           />
           <div className="max-w-4xl mx-auto px-6">
             <motion.h2 {...fadeUp()} className="text-2xl md:text-3xl font-black mb-12" style={{ color: 'var(--c-text-1)' }}>
-              Plataformas
+              {ui.platforms}
             </motion.h2>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {service.platforms.map((platform, i) => (
+              {platforms.map((platform, i) => (
                 <motion.div
                   key={platform.name}
                   {...fadeUp(i * 0.07)}
@@ -158,11 +181,11 @@ export function ServicePage({ service }: Props) {
       <section className="py-24" style={{ background: 'var(--c-bg)' }}>
         <div className="max-w-4xl mx-auto px-6">
           <motion.h2 {...fadeUp()} className="text-2xl md:text-3xl font-black mb-12" style={{ color: 'var(--c-text-1)' }}>
-            Por que a AD TEC?
+            {ui.whyAdtec}
           </motion.h2>
 
           <div className="flex flex-col gap-4">
-            {service.differentials.map((item, i) => (
+            {differentials.map((item, i) => (
               <motion.div key={i} {...fadeLeft(i * 0.06)} className="flex items-start gap-4">
                 <span
                   className="mt-0.5 shrink-0 w-5 h-5 rounded-full flex items-center justify-center"
@@ -188,17 +211,17 @@ export function ServicePage({ service }: Props) {
           />
           <motion.div {...fadeUp()} className="relative z-10">
             <h2 className="text-3xl md:text-4xl font-black mb-4" style={{ color: 'var(--c-text-1)' }}>
-              Pronto para escalar seus resultados?
+              {ui.ctaHeading}
             </h2>
             <p className="text-base mb-10 max-w-xl mx-auto" style={{ color: 'var(--c-text-2)' }}>
-              Fale com nosso time e descubra como a AD TEC pode acelerar o crescimento do seu negócio.
+              {ui.ctaSubtext}
             </p>
             <Link
               href="/#contato"
               className="inline-flex items-center gap-2 px-8 py-4 rounded-full text-sm font-semibold transition-opacity hover:opacity-90"
               style={{ background: c.accent, color: '#fff' }}
             >
-              {service.ctaLabel}
+              {ctaLabel}
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                 <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
               </svg>

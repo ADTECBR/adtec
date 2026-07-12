@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
 import type { Language } from '@/lib/types';
 
 interface LanguageContextValue {
@@ -14,7 +14,18 @@ const LanguageContext = createContext<LanguageContextValue>({
 });
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [lang, setLang] = useState<Language>('pt');
+  const [lang, setLangState] = useState<Language>('pt');
+
+  useEffect(() => {
+    const stored = localStorage.getItem('adtec-lang') as Language | null;
+    if (stored === 'en' || stored === 'pt') setLangState(stored);
+  }, []);
+
+  const setLang = (l: Language) => {
+    setLangState(l);
+    localStorage.setItem('adtec-lang', l);
+  };
+
   return (
     <LanguageContext.Provider value={{ lang, setLang }}>
       {children}

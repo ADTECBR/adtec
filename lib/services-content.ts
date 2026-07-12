@@ -9,6 +9,16 @@ export interface ServicePlatform {
   description: string;
 }
 
+interface ServiceLocale {
+  badge: string;
+  headline: string;
+  intro: string[];
+  steps: Array<{ title: string; description: string }>;
+  platforms?: Array<{ name: string; description: string }>;
+  differentials: string[];
+  ctaLabel: string;
+}
+
 export interface ServiceContent {
   slug: string;
   color: 'green' | 'blue' | 'gold';
@@ -19,6 +29,7 @@ export interface ServiceContent {
   platforms?: ServicePlatform[];
   differentials: string[];
   ctaLabel: string;
+  en?: ServiceLocale;
   meta: {
     title: string;
     description: string;
@@ -73,6 +84,36 @@ const services: ServiceContent[] = [
       'Atendimento direto com o estrategista responsável pela sua conta, sem intermediários',
     ],
     ctaLabel: 'Agendar Consultoria Estratégica',
+    en: {
+      badge: 'Paid Traffic',
+      headline: 'Advertising with Intelligence',
+      intro: [
+        'We bring intelligence to B2B and B2C traffic acquisition, combining an efficient operation with highly experienced digital media professionals — amplified by artificial intelligence for data analysis and continuous optimization.',
+        'We don\'t manage campaigns by volume. We manage by results. Together, we define your business goal — qualified lead generation, direct sales, brand awareness, or monetization traffic — and execute with mastery, full transparency, and a focus on sustainable growth.',
+      ],
+      steps: [
+        { title: 'Diagnosis', description: 'We audit your campaign history, map your target audience, analyze the competition, and identify immediate growth opportunities — with data, not assumptions.' },
+        { title: 'Strategy', description: 'Together, we define the objective and build a custom media plan: channels, formats, budget distribution, targeting, and clear KPIs before any investment.' },
+        { title: 'Execution', description: 'Flawless technical implementation — campaign structure, creatives, pixels, conversion events, and data integrations configured with precision by professionals with 20+ years of experience.' },
+        { title: 'Continuous Optimization', description: 'Daily monitoring, A/B testing, bid and targeting adjustments guided by real data. Our AI layer analyzes patterns and anticipates opportunities before the market sees them.' },
+      ],
+      platforms: [
+        { name: 'Google Ads', description: 'Search, Display, YouTube, Performance Max, Shopping' },
+        { name: 'Meta Ads', description: 'Facebook, Instagram, Reels, Advantage+ Campaigns' },
+        { name: 'TikTok for Business', description: 'In-Feed Ads, TopView, Brand Takeover, Spark Ads' },
+        { name: 'Spotify Ads Manager', description: 'Audio Ads, Video Takeover, Podcast Ads' },
+        { name: 'X (Twitter) Ads', description: 'Promoted Posts, Trend Takeover, Follower Campaigns' },
+      ],
+      differentials: [
+        'Official Google and Meta Partners — early access to betas and priority support',
+        'Real-time dashboards: you see every cent of your investment, always',
+        'Senior team with over 20 years of digital media experience',
+        'Artificial intelligence applied to optimization — decisions based on data, not gut feeling',
+        'Weekly reports with strategic analysis, not just context-free metrics',
+        'Direct access to the strategist managing your account — no middlemen',
+      ],
+      ctaLabel: 'Schedule a Strategy Consultation',
+    },
     meta: {
       title: 'Tráfego Pago — Google Ads, Meta Ads e mais | AD TEC',
       description: 'Gestão de tráfego pago B2B e B2C com inteligência artificial. Parceiros Google e Meta. Dashboards em tempo real e mais de 20 anos de experiência em mídia digital.',
@@ -118,6 +159,29 @@ const services: ServiceContent[] = [
       'Mais de 20 anos de experiência com sites de alto tráfego e grandes publishers',
     ],
     ctaLabel: 'Agendar Consultoria Estratégica',
+    en: {
+      badge: 'SEO & Organic Growth',
+      headline: 'Be found. Without relying on ads.',
+      intro: [
+        'We analyze your website or online store from top to bottom — technical, structural, content, and authority aspects — so every page meets the latest requirements of search engines and generative AI systems.',
+        'The result is consistent organic growth: more Google visibility, more qualified traffic, and less dependence on paid advertising. Customers who find you because you\'re relevant — not because you paid to appear.',
+      ],
+      steps: [
+        { title: 'Complete Audit', description: 'We crawl your entire site: speed, Core Web Vitals, indexing, technical errors, URL structure, structured data, canonicals, and keyword coverage. We deliver a report with clear priorities.' },
+        { title: 'Keyword Strategy', description: 'We map your audience\'s search intent — informational, navigational, and transactional — and define which terms offer the best balance of volume, competition, and conversion potential.' },
+        { title: 'Technical & On-page SEO', description: 'We optimize titles, meta descriptions, headings, images, load speed, and internal link structure. We implement structured data (schema.org) for featured snippets and rich results.' },
+        { title: 'Authority & Results', description: 'We build authority through content strategy and relevant link building. We track rankings, organic traffic, and conversions month by month — with reports that show real evolution, not just positions.' },
+      ],
+      differentials: [
+        'Deep technical analysis beyond the basics — we track what automated tools overlook',
+        'SEO ready for generative AI (SGE, Perplexity, Gemini) — the future of search',
+        'Integration with Google Search Console, Analytics, and real performance data',
+        'Strategically optimized content — written with intent, not just keywords',
+        'Monthly reports with ranking evolution, organic traffic, and revenue impact',
+        'Over 20 years of experience with high-traffic sites and major publishers',
+      ],
+      ctaLabel: 'Schedule a Strategy Consultation',
+    },
     meta: {
       title: 'SEO & Crescimento Orgânico — Auditoria e Estratégia | AD TEC',
       description: 'Auditoria técnica completa, estratégia de palavras-chave e SEO preparado para IA generativa. Cresça organicamente no Google sem depender de tráfego pago.',
@@ -163,6 +227,29 @@ const services: ServiceContent[] = [
       'Mais de 20 anos entregando projetos web para publishers, e-commerces e empresas B2B',
     ],
     ctaLabel: 'Agendar Consultoria Estratégica',
+    en: {
+      badge: 'Web Development',
+      headline: 'Digital presence that works for you.',
+      intro: [
+        'Is your company still offline — or has your site fallen behind? We develop institutional sites, landing pages, and online stores with cutting-edge technologies, ensuring every project is fast, lightweight, and shows your customers exactly what they need to see to make a decision.',
+        'We don\'t just deliver beautiful code. We deliver performance, conversion, and a digital experience that represents your brand with the seriousness it deserves — from design to deployment, including technical SEO and Core Web Vitals from the very first commit.',
+      ],
+      steps: [
+        { title: 'Briefing & Strategy', description: 'We understand your business, your audience, and your objectives before writing a single line of code. We define architecture, technologies, navigation flows, and conversion KPIs.' },
+        { title: 'Design & UX', description: 'We create modern, functional layouts aligned with your brand identity. Every detail is designed to guide visitors toward action — whether a contact request, a purchase, or a signup.' },
+        { title: 'Development', description: 'We implement with modern technologies — Next.js, React, performance-first. Clean, accessible, secure code ready to grow with your business.' },
+        { title: 'Launch & Evolution', description: 'Optimized deployment, integration with Analytics, Tag Manager, and CRO tools. After launch, we track metrics and evolve the project based on real data.' },
+      ],
+      differentials: [
+        'Fast sites by default — Core Web Vitals optimized from the start',
+        'Technical SEO integrated into development, not added later as a fix',
+        'Mobile-first: perfect experience on any device and screen size',
+        'Native integration with Google Analytics, Tag Manager, CRM, and automation tools',
+        'Clean, well-structured code — easy to maintain, expand, and transfer',
+        'Over 20 years delivering web projects for publishers, e-commerces, and B2B companies',
+      ],
+      ctaLabel: 'Schedule a Strategy Consultation',
+    },
     meta: {
       title: 'Desenvolvimento Web — Sites Rápidos e Focados em Conversão | AD TEC',
       description: 'Criamos sites institucionais, landing pages e lojas virtuais com as novas tecnologias. Leves, rápidos, com SEO técnico integrado e foco em conversão.',
@@ -208,6 +295,29 @@ const services: ServiceContent[] = [
       'Experiência com publishers de grande porte, portais de notícias e veículos especializados',
     ],
     ctaLabel: 'Agendar Consultoria Estratégica',
+    en: {
+      badge: 'AdOps for Publishers',
+      headline: 'Your AdOps Hub. Our 26-Year Expertise.',
+      intro: [
+        'With over 26 years of expertise in Ad Operations for Publishers, we are the partner your sales team has been waiting for: we take over the entire day-to-day AdOps operation so you can focus on what matters — growing revenue and delivering results for your advertisers.',
+        'We operate primarily in Google Ad Manager 360 and act as an extension of your team — executing campaigns, performing continuous optimizations, and presenting results clearly to your internal team or directly to your clients.',
+      ],
+      steps: [
+        { title: 'Onboarding & Diagnosis', description: 'We map your entire current operation: inventory structure, active campaigns, Ad Manager configurations, commercial agreements, and operational bottlenecks. We deliver an action plan within 5 business days.' },
+        { title: 'Campaign Operations', description: 'We execute full trafficking — line item creation, creative uploads, targeting, frequency caps, pacing, and delivery monitoring. Zero delays for your sales team.' },
+        { title: 'Continuous Optimization', description: 'Daily performance analysis, priority adjustments, inventory conflict resolution, and fill rate maximization. Every impression delivered with maximum efficiency.' },
+        { title: 'Reports & Presentations', description: 'Custom dashboards and periodic reports in accessible language for your commercial team or final advertisers — highlighting delivery, viewability, CTR, and generated value.' },
+      ],
+      differentials: [
+        '26 years of exclusive experience in ad operations for publishers',
+        'Deep mastery of Google Ad Manager 360 — from setup to advanced troubleshooting',
+        'We act as an extension of your team: your sales team gets direct and agile support',
+        'Direct and programmatic campaign operations in the same integrated flow',
+        'Clear reports for advertisers — fewer alignment meetings, more contract renewals',
+        'Experience with large publishers, news portals, and specialized media outlets',
+      ],
+      ctaLabel: 'Schedule a Strategy Consultation',
+    },
     meta: {
       title: 'AdOps para Publishers — Google Ad Manager 360 | AD TEC',
       description: 'Hub de AdOps com 26 anos de expertise. Operação completa no Google Ad Manager 360, execução de campanhas, otimizações e relatórios para publishers e seu time de vendas.',
@@ -253,6 +363,29 @@ const services: ServiceContent[] = [
       'Entregamos um roadmap acionável — não um relatório que fica na gaveta',
     ],
     ctaLabel: 'Agendar Consultoria Estratégica',
+    en: {
+      badge: 'AdTech Consulting',
+      headline: 'Your ad data deserves to perform better.',
+      intro: [
+        'Are you a publisher — of any size, any niche — and feel your advertising numbers fall short of their potential? We provide complete AdTech consulting, analyzing your scripts, partners, integrations, and configurations to ensure your metrics meet the demands of today\'s market.',
+        'The result is concrete: higher viewability, faster-loading ads, higher CPMs, and growing revenue — without switching media partners, just extracting the maximum from what you already have.',
+      ],
+      steps: [
+        { title: 'Stack Audit', description: 'We analyze all advertising scripts running on your site — SSPs, DSPs, header bidding tools, lazy loading, wrappers — identifying conflicts, unnecessary scripts, and immediate gain opportunities.' },
+        { title: 'Viewability Diagnosis', description: 'We measure viewability by position, device, and format. We identify why certain units fall below 50% and design the fix — whether it\'s layout, lazy load, scroll depth, or partner configuration.' },
+        { title: 'Speed Optimization', description: 'Advertising scripts are one of the biggest culprits of poor page speed. We audit the impact of each tag on CLS, LCP, and INP, and implement fixes — without sacrificing revenue.' },
+        { title: 'CPM Growth Plan', description: 'With real data in hand, we deliver an action roadmap prioritized by revenue impact: new partners to test, configurations to adjust, formats to explore, and integrations to improve.' },
+      ],
+      differentials: [
+        'Outside perspective — we see problems that those inside the day-to-day miss',
+        'Experience with publishers of all sizes: from niche blogs to major portals',
+        'Real viewability analysis with industry-standard tools, not just estimates',
+        'Focus on ad load speed without sacrificing revenue',
+        'Deep knowledge of SSPs, header bidding, Google Ad Manager, and Amazon TAM/UAM',
+        'We deliver an actionable roadmap — not a report that gathers dust',
+      ],
+      ctaLabel: 'Schedule a Strategy Consultation',
+    },
     meta: {
       title: 'Consultoria AdTech — Viewability, CPM e Velocidade para Publishers | AD TEC',
       description: 'Auditoria completa de scripts, parceiros e integrações de publicidade. Aumentamos viewability, melhoramos velocidade de carregamento e elevamos CPM e receita do seu site.',
@@ -298,6 +431,29 @@ const services: ServiceContent[] = [
       'Do naming ao brandbook — atendemos desde a criação do zero até a renovação de marcas existentes',
     ],
     ctaLabel: 'Agendar Consultoria de Marca',
+    en: {
+      badge: 'Visual Identity & Branding',
+      headline: 'A brand that sticks — forever.',
+      intro: [
+        'We know that a great visual identity can stay in your customer\'s memory forever. That\'s why we don\'t work with templates. We use a methodology where your brand speaks directly to your products, your values, and the people you want to reach.',
+        'You sit down with us, share your story, and show us your products. From there, we develop complete branding solutions — applicable everywhere: website, packaging, internal communications, social media, and much more.',
+      ],
+      steps: [
+        { title: 'Immersion', description: 'We listen before we create. We understand your story, your market, your competitors, and most importantly, the people you want to fall in love with your brand. The more you share, the stronger the identity.' },
+        { title: 'Brand Strategy', description: 'We define positioning, value proposition, tone of voice, and visual attributes that will guide every creative decision — from the favicon icon to the packaging layout.' },
+        { title: 'Visual Creation', description: 'We develop your logo, color palette, typography, graphic patterns, and all visual elements that form your identity. We present with context and strategic rationale, not just aesthetics.' },
+        { title: 'Brandbook & Applications', description: 'We deliver a complete brandbook with usage guidelines — and apply the identity to the touchpoints we define together: website, social media, packaging, signage, or internal communications.' },
+      ],
+      differentials: [
+        'Proprietary methodology: the brand is built from your story and your products',
+        'Identity designed for all touchpoints, not just the logo',
+        'Complete brandbook with clear guidelines for your team and suppliers',
+        'Integrated vision between branding and digital marketing — the brand works in the real world and online',
+        'Experience with B2B, B2C, startups, and rebranding of established brands',
+        'From naming to brandbook — we serve from creation from scratch to renewal of existing brands',
+      ],
+      ctaLabel: 'Schedule a Brand Consultation',
+    },
     meta: {
       title: 'Identidade Visual & Branding — Do Logo ao Brandbook | AD TEC',
       description: 'Criamos identidades visuais que ficam na memória. Metodologia própria, brandbook completo e aplicação em todos os pontos de contato — do website às embalagens.',
@@ -349,6 +505,35 @@ const services: ServiceContent[] = [
       'Atendimento que funciona 24h por dia, 7 dias por semana — sem custo adicional de equipe.',
     ],
     ctaLabel: 'Quero automatizar meu atendimento',
+    en: {
+      badge: 'WhatsApp Automation',
+      headline: 'Intelligent 24h Customer Service.',
+      intro: [
+        'Your WhatsApp responding to customers 24 hours a day, automatically qualifying leads and scheduling appointments — without needing more staff.',
+        'We implement and configure a virtual assistant powered by GPT-4o directly on your company\'s WhatsApp. From connection to AI training, we handle everything so you start serving customers better from day one.',
+      ],
+      steps: [
+        { title: 'Business Diagnosis', description: 'We understand your current service flow, map your customers\' most frequent questions, and define the ideal profile for your virtual assistant.' },
+        { title: 'AI Configuration & Training', description: 'We connect WhatsApp, configure the tone of voice, service hours, and train the AI with your business-specific knowledge.' },
+        { title: 'Activation & Monitoring', description: 'We launch the assistant in production and monitor the first conversations to ensure quality and adjust AI behavior as needed.' },
+        { title: 'Continuous Optimization', description: 'We periodically analyze conversations, improve responses, and expand the assistant\'s capabilities as your business grows.' },
+      ],
+      platforms: [
+        { name: 'WhatsApp Business', description: 'Direct connection via official Meta API or QR code, according to your needs.' },
+        { name: 'GPT-4o', description: 'OpenAI\'s AI model for natural, intelligent, and contextual responses.' },
+        { name: 'HubSpot / Pipedrive / Zoho', description: 'Integration with major CRMs to automatically sync leads.' },
+        { name: 'Takeover Mode', description: 'Take over any conversation manually with one click when you need the human touch.' },
+      ],
+      differentials: [
+        'Real platform experience — we developed and operated a WhatsApp automation SaaS, now brought into AD TEC as consulting.',
+        'Complete configuration and AI training included — we don\'t just deliver the tool, we implement the solution end-to-end.',
+        'CRM and marketing tool integration so no lead gets lost along the way.',
+        'Continuous conversation monitoring and optimization to continuously improve conversion rates.',
+        'LGPD compliance: the entire data architecture follows privacy best practices.',
+        'Service that works 24 hours a day, 7 days a week — at no additional staffing cost.',
+      ],
+      ctaLabel: 'I want to automate my customer service',
+    },
     meta: {
       title: 'Automação de Atendimento via WhatsApp com IA | AD TEC',
       description: 'Implementamos assistentes virtuais com IA no seu WhatsApp: atendimento 24h, qualificação automática de leads e agendamento. Consultoria completa da AD TEC.',

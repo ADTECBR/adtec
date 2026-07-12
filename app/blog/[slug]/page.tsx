@@ -1,9 +1,8 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getAllPosts, getPostBySlug, renderMarkdown } from '@/lib/blog';
-import { formatDate } from '@/lib/utils';
+import { BlogPostBackLink, BlogPostMeta, BlogPostFooterLink } from '@/components/sections/BlogPostShell';
 
 interface Props {
   params: { slug: string };
@@ -44,16 +43,7 @@ export default async function BlogPostPage({ params }: Props) {
   return (
     <div style={{ background: 'var(--c-bg)', minHeight: '100vh' }}>
       <article className="max-w-3xl mx-auto px-6 pt-36 pb-24">
-        <Link
-          href="/blog"
-          className="inline-flex items-center gap-2 text-sm mb-10 transition-colors"
-          style={{ color: 'var(--c-text-2)' }}
-        >
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <path d="M13 8H3M7 4l-4 4 4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-          Blog
-        </Link>
+        <BlogPostBackLink />
 
         {post.tags && post.tags.length > 0 && (
           <div className="flex flex-wrap gap-2 mb-5">
@@ -73,11 +63,7 @@ export default async function BlogPostPage({ params }: Props) {
           <p className="text-lg leading-relaxed mb-6" style={{ color: 'var(--c-text-2)' }}>{post.description}</p>
         )}
 
-        <div className="flex items-center gap-4 pb-8 mb-8 border-b text-sm" style={{ borderColor: 'var(--c-border)', color: 'var(--c-text-3)' }}>
-          <span>AD TEC</span>
-          <span>·</span>
-          <time dateTime={post.date}>{formatDate(post.date, 'pt')}</time>
-        </div>
+        <BlogPostMeta date={post.date} />
 
         {post.image && (
           <div className="img-bleed relative rounded-2xl overflow-hidden mb-10" style={{ height: 400 }}>
@@ -88,12 +74,7 @@ export default async function BlogPostPage({ params }: Props) {
         <div className="prose-adtec" dangerouslySetInnerHTML={{ __html: contentHtml }} />
 
         <div className="mt-16 pt-8 border-t" style={{ borderColor: 'var(--c-border)' }}>
-          <Link href="/blog" className="inline-flex items-center gap-2 text-sm font-medium" style={{ color: '#4285f4' }}>
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <path d="M13 8H3M7 4l-4 4 4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-            Ver todos os artigos
-          </Link>
+          <BlogPostFooterLink />
         </div>
       </article>
     </div>
