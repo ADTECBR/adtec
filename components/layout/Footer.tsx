@@ -84,7 +84,23 @@ export function Footer() {
           style={{ borderColor: 'var(--c-border)', color: 'var(--c-text-3)' }}
         >
           <span>© {year} AD TEC Soluções em Tecnologia e Publicidade LTDA. {t.footer.rights[lang]}</span>
-          <Image src="/novo-logo-35A853.svg" alt="AD TEC" width={72} height={22} className="h-5 w-auto opacity-80" />
+          <div className="flex items-center gap-5">
+            <Link
+              href="/privacidade"
+              className="transition-opacity hover:opacity-80"
+              style={{ color: 'var(--c-text-3)' }}
+            >
+              {lang === 'pt' ? 'Política de Privacidade' : 'Privacy Policy'}
+            </Link>
+            <Link
+              href="/termos"
+              className="transition-opacity hover:opacity-80"
+              style={{ color: 'var(--c-text-3)' }}
+            >
+              {lang === 'pt' ? 'Termos de Uso' : 'Terms of Use'}
+            </Link>
+            <Image src="/novo-logo-35A853.svg" alt="AD TEC" width={72} height={22} className="h-5 w-auto opacity-80" />
+          </div>
         </div>
       </div>
     </footer>
