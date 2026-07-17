@@ -5,6 +5,7 @@ import { About }        from '@/components/sections/About';
 import { Clients }      from '@/components/sections/Clients';
 import { BlogPreview }  from '@/components/sections/BlogPreview';
 import { Testimonials } from '@/components/sections/Testimonials';
+import { Community }    from '@/components/sections/Community';
 import { Contact }      from '@/components/sections/Contact';
 import { getAllPosts }   from '@/lib/blog';
 
@@ -20,6 +21,7 @@ export default function Home() {
       <Clients />
       <BlogPreview posts={posts} />
       <Testimonials />
+      <Community />
       <Contact />
     </>
   );

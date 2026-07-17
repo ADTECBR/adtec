@@ -4,7 +4,8 @@ export const t = {
     about:     { pt: 'Sobre',     en: 'About'      },
     clients:   { pt: 'Clientes',  en: 'Clients'    },
     blog:      { pt: 'Blog',      en: 'Blog'       },
-    contact:   { pt: 'Contato',   en: 'Contact'    },
+    contact:   { pt: 'Contato',    en: 'Contact'    },
+    community: { pt: 'Comunidade', en: 'Community'  },
     cta:       { pt: 'Fale Conosco', en: 'Get in Touch' },
   },
 

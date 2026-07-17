@@ -9,14 +9,16 @@ import { useLanguage } from '@/components/ui/LanguageProvider';
 import { useTheme } from '@/components/ui/ThemeProvider';
 import { t } from '@/lib/translations';
 
-const navLinks = ['services', 'about', 'clients', 'blog', 'contact'] as const;
+const navLinks = ['services', 'about', 'clients', 'blog', 'contact', 'community'] as const;
 const anchors: Record<string, string> = {
-  services: '#servicos',
-  about:    '#sobre',
-  clients:  '#clientes',
-  blog:     '/blog',
-  contact:  '#contato',
+  services:  '#servicos',
+  about:     '#sobre',
+  clients:   '#clientes',
+  blog:      '/blog',
+  contact:   '#contato',
+  community: 'https://batepapo.ad.tec.br',
 };
+const externalLinks = new Set(['community']);
 
 function SunIcon() {
   return (
@@ -50,9 +52,8 @@ export function Header() {
   }, []);
 
   function href(key: string) {
-    const anchor = anchors[key];
-    if (key === 'blog') return '/blog';
-    return isHome ? anchor : `/${anchor}`;
+    if (externalLinks.has(key) || key === 'blog') return anchors[key];
+    return isHome ? anchors[key] : `/${anchors[key]}`;
   }
 
   const isDark        = theme === 'dark';
@@ -83,18 +84,28 @@ export function Header() {
 
         {/* Desktop nav */}
         <nav className="hidden md:flex items-center gap-8">
-          {navLinks.map((key) => (
-            <a
-              key={key}
-              href={href(key)}
-              className="text-sm font-medium transition-colors"
-              style={{ color: controlColor }}
-              onMouseEnter={(e) => ((e.target as HTMLElement).style.color = 'var(--c-text-1)')}
-              onMouseLeave={(e) => ((e.target as HTMLElement).style.color = controlColor)}
-            >
-              {t.nav[key][lang]}
-            </a>
-          ))}
+          {navLinks.map((key) => {
+            const isExternal = externalLinks.has(key);
+            const isCommunity = key === 'community';
+            return (
+              <a
+                key={key}
+                href={href(key)}
+                className="text-sm font-medium transition-colors flex items-center gap-1"
+                style={{ color: isCommunity ? '#1b9e4b' : controlColor }}
+                {...(isExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = isCommunity ? '#178940' : 'var(--c-text-1)')}
+                onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.color = isCommunity ? '#1b9e4b' : controlColor)}
+              >
+                {t.nav[key][lang]}
+                {isCommunity && (
+                  <svg width="10" height="10" viewBox="0 0 12 12" fill="none" style={{ opacity: 0.7 }}>
+                    <path d="M2 10L10 2M10 2H5M10 2v5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                )}
+              </a>
+            );
+          })}
         </nav>
 
         {/* Right controls */}
@@ -173,17 +184,27 @@ export function Header() {
               style={{ background: 'var(--c-menu)', backdropFilter: 'blur(20px)' }}
             >
               <nav className="flex flex-col px-6 py-6 gap-5">
-                {navLinks.map((key) => (
-                  <a
-                    key={key}
-                    href={href(key)}
-                    onClick={() => setMenuOpen(false)}
-                    className="text-base font-medium"
-                    style={{ color: 'var(--c-text-1)' }}
-                  >
-                    {t.nav[key][lang]}
-                  </a>
-                ))}
+                {navLinks.map((key) => {
+                  const isExternal = externalLinks.has(key);
+                  const isCommunity = key === 'community';
+                  return (
+                    <a
+                      key={key}
+                      href={href(key)}
+                      onClick={() => setMenuOpen(false)}
+                      className="text-base font-medium flex items-center gap-1.5"
+                      style={{ color: isCommunity ? '#1b9e4b' : 'var(--c-text-1)' }}
+                      {...(isExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                    >
+                      {t.nav[key][lang]}
+                      {isCommunity && (
+                        <svg width="11" height="11" viewBox="0 0 12 12" fill="none" style={{ opacity: 0.7 }}>
+                          <path d="M2 10L10 2M10 2H5M10 2v5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                      )}
+                    </a>
+                  );
+                })}
                 <div className="flex items-center gap-3 pt-2 border-t" style={{ borderColor: 'var(--c-border)' }}>
                   <button
                     onClick={toggleTheme}
