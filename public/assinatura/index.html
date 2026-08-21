@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gerador de Assinatura de Email — Gmail</title>
+<style>
+  :root{
+    --bg:#f4f5f7;
+    --panel:#ffffff;
+    --border:#e2e4e9;
+    --text:#1c1e21;
+    --muted:#6b7280;
+    --accent:#2563eb;
+    --accent-hover:#1d4ed8;
+    --radius:10px;
+    --shadow:0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#0f1115;
+      --panel:#171a21;
+      --border:#2a2e37;
+      --text:#e7e9ee;
+      --muted:#9aa1ad;
+      --shadow:0 1px 3px rgba(0,0,0,.4);
+    }
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg);
+    color:var(--text);
+  }
+  header{
+    padding:28px 24px 8px;
+    max-width:1200px;
+    margin:0 auto;
+  }
+  header h1{
+    margin:0 0 6px;
+    font-size:1.5rem;
+  }
+  header p{
+    margin:0;
+    color:var(--muted);
+    font-size:.95rem;
+  }
+  .wrap{
+    max-width:1200px;
+    margin:0 auto;
+    padding:16px 24px 60px;
+    display:grid;
+    grid-template-columns:minmax(320px,440px) 1fr;
+    gap:20px;
+    align-items:start;
+  }
+  @media (max-width:900px){
+    .wrap{grid-template-columns:1fr;}
+  }
+  .panel{
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    padding:20px;
+  }
+  .panel + .panel{margin-top:20px;}
+  fieldset{
+    border:none;
+    padding:0;
+    margin:0 0 18px;
+  }
+  fieldset legend{
+    font-weight:600;
+    font-size:.85rem;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+    color:var(--muted);
+    padding:0 0 10px;
+  }
+  .field{
+    margin-bottom:12px;
+  }
+  .field label{
+    display:block;
+    font-size:.82rem;
+    font-weight:500;
+    margin-bottom:4px;
+    color:var(--text);
+  }
+  .field input[type=text],
+  .field input[type=email],
+  .field input[type=tel],
+  .field input[type=url],
+  .field select{
+    width:100%;
+    padding:8px 10px;
+    border:1px solid var(--border);
+    border-radius:6px;
+    background:var(--bg);
+    color:var(--text);
+    font-size:.9rem;
+  }
+  .field input:focus,.field select:focus{
+    outline:2px solid var(--accent);
+    outline-offset:-1px;
+  }
+  .row2{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+  }
+  .row3{
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    gap:10px;
+  }
+  .radio-group{
+    display:flex;
+    gap:14px;
+    margin-bottom:10px;
+  }
+  .radio-group label{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    font-size:.85rem;
+    cursor:pointer;
+  }
+  .templates{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-bottom:14px;
+  }
+  .templates label{
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:8px 12px;
+    font-size:.8rem;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    gap:6px;
+  }
+  .templates input{margin:0;}
+  .templates label:has(input:checked){
+    border-color:var(--accent);
+    background:color-mix(in srgb, var(--accent) 10%, transparent);
+  }
+  .color-swatch-row{
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .color-swatch-row input[type=color]{
+    width:44px;height:34px;border:1px solid var(--border);border-radius:6px;padding:2px;background:var(--panel);
+  }
+  .muted-note{
+    font-size:.78rem;
+    color:var(--muted);
+    margin-top:4px;
+    line-height:1.4;
+  }
+  .upload-row{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+  .upload-row input[type=file]{
+    font-size:.8rem;
+    max-width:220px;
+  }
+  .photo-preview{
+    width:48px;height:48px;border-radius:50%;object-fit:cover;border:1px solid var(--border);background:var(--bg);
+  }
+  .btn{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    background:var(--accent);
+    color:#fff;
+    border:none;
+    padding:10px 16px;
+    border-radius:8px;
+    font-size:.9rem;
+    font-weight:600;
+    cursor:pointer;
+    transition:background .15s;
+  }
+  .btn:hover{background:var(--accent-hover);}
+  .btn.secondary{
+    background:transparent;
+    color:var(--text);
+    border:1px solid var(--border);
+  }
+  .btn.secondary:hover{background:var(--bg);}
+  .btn.small{padding:6px 10px;font-size:.78rem;}
+  .actions{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-top:6px;
+  }
+  .preview-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:14px;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+  .preview-header h2{
+    font-size:1rem;
+    margin:0;
+  }
+  #status-msg{
+    font-size:.82rem;
+    color:var(--accent);
+    min-height:1.2em;
+  }
+  .preview-frame{
+    border:1px dashed var(--border);
+    border-radius:8px;
+    padding:20px;
+    background:#ffffff;
+    overflow-x:auto;
+  }
+  @media (prefers-color-scheme: dark){
+    .preview-frame{background:#ffffff;}
+  }
+  .steps{
+    margin-top:20px;
+    font-size:.85rem;
+    color:var(--muted);
+    line-height:1.6;
+  }
+  .steps ol{padding-left:20px;margin:6px 0 0;}
+  .steps b{color:var(--text);}
+  footer{
+    text-align:center;
+    color:var(--muted);
+    font-size:.78rem;
+    padding:20px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Gerador de Assinatura de Email para Gmail</h1>
+  <p>Preencha os campos, veja o preview em tempo real e copie pronto para colar em Configurações → Assinatura do Gmail.</p>
+</header>
+
+<div class="wrap">
+
+  <!-- FORM -->
+  <div class="panel" id="form-panel">
+
+    <fieldset>
+      <legend>Modelo</legend>
+      <div class="templates">
+        <label><input type="radio" name="template" value="classic" checked> Clássico (foto à esquerda)</label>
+        <label><input type="radio" name="template" value="compact"> Compacto (sem foto)</label>
+        <label><input type="radio" name="template" value="modern"> Moderno (barra colorida)</label>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Dados pessoais</legend>
+      <div class="field">
+        <label for="f-name">Nome completo</label>
+        <input type="text" id="f-name" placeholder="Ana Rocha" value="Ana Rocha">
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label for="f-title">Cargo</label>
+          <input type="text" id="f-title" placeholder="Gerente de Contas" value="Gerente de Contas">
+        </div>
+        <div class="field">
+          <label for="f-company">Empresa</label>
+          <input type="text" id="f-company" placeholder="Ad.tec" value="Ad.tec">
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Contato</legend>
+      <div class="row2">
+        <div class="field">
+          <label for="f-phone">Telefone</label>
+          <input type="tel" id="f-phone" placeholder="(11) 4000-0000" value="(11) 4000-0000">
+        </div>
+        <div class="field">
+          <label for="f-mobile">Celular / WhatsApp</label>
+          <input type="tel" id="f-mobile" placeholder="(11) 90000-0000" value="(11) 90000-0000">
+        </div>
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label for="f-email">Email</label>
+          <input type="email" id="f-email" placeholder="ana@ad.tec.br" value="ana@ad.tec.br">
+        </div>
+        <div class="field">
+          <label for="f-website">Website</label>
+          <input type="url" id="f-website" placeholder="https://ad.tec.br" value="https://ad.tec.br">
+        </div>
+      </div>
+      <div class="field">
+        <label for="f-address">Endereço (opcional)</label>
+        <input type="text" id="f-address" placeholder="Rua Exemplo, 123 — São Paulo, SP">
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Redes sociais (opcional — deixe em branco para ocultar)</legend>
+      <div class="row2">
+        <div class="field">
+          <label for="f-linkedin">LinkedIn</label>
+          <input type="url" id="f-linkedin" placeholder="https://linkedin.com/in/...">
+        </div>
+        <div class="field">
+          <label for="f-instagram">Instagram</label>
+          <input type="url" id="f-instagram" placeholder="https://instagram.com/...">
+        </div>
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label for="f-x">X / Twitter</label>
+          <input type="url" id="f-x" placeholder="https://x.com/...">
+        </div>
+        <div class="field">
+          <label for="f-youtube">YouTube</label>
+          <input type="url" id="f-youtube" placeholder="https://youtube.com/@...">
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset id="photo-fieldset">
+      <legend>Foto (100×100)</legend>
+      <div class="radio-group">
+        <label><input type="radio" name="photo-mode" value="url" checked> Usar URL</label>
+        <label><input type="radio" name="photo-mode" value="upload"> Enviar arquivo</label>
+      </div>
+      <div class="field" id="photo-url-field">
+        <input type="url" id="f-photo-url" placeholder="https://ad.tec.br/img/ana.jpg — aceita também link de foto do LinkedIn">
+        <div class="muted-note">Aceita URL de qualquer imagem, inclusive o link direto da sua foto de perfil do LinkedIn (clique com o botão direito na foto do seu perfil → "Copiar endereço da imagem"). Para uma foto hospedada por você (ex: no seu site na Vercel), a URL não expira nunca — é o método mais confiável.</div>
+        <div id="linkedin-warning" class="muted-note" style="display:none;margin-top:8px;padding:10px;border:1px solid #f0b429;border-radius:6px;background:rgba(240,180,41,.12);color:inherit;">
+          ⚠️ Essa é uma URL temporária do LinkedIn — ela tem um token de validade e vai parar de funcionar depois de um tempo (a foto vai sumir da assinatura). Clique abaixo para tentar embutir a imagem de forma permanente agora.
+          <div style="margin-top:8px;">
+            <button type="button" class="btn small" id="btn-convert-linkedin">Converter para permanente</button>
+          </div>
+        </div>
+      </div>
+      <div class="field" id="photo-upload-field" style="display:none;">
+        <div class="upload-row">
+          <input type="file" id="f-photo-file" accept="image/*">
+          <img id="photo-preview-img" class="photo-preview" style="display:none;">
+        </div>
+        <div class="muted-note">A imagem é convertida para Base64 e embutida direto no HTML. Funciona bem no Gmail, mas alguns clientes de email bloqueiam imagens embutidas — se puder, prefira URL.</div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Estilo</legend>
+      <div class="row2">
+        <div class="field">
+          <label for="f-color">Cor de destaque</label>
+          <div class="color-swatch-row">
+            <input type="color" id="f-color" value="#2563eb">
+            <span id="color-hex" class="muted-note">#2563eb</span>
+          </div>
+        </div>
+        <div class="field">
+          <label for="f-font">Fonte</label>
+          <select id="f-font">
+            <option value="Arial, Helvetica, sans-serif" selected>Arial</option>
+            <option value="'Segoe UI', Tahoma, sans-serif">Segoe UI</option>
+            <option value="Georgia, 'Times New Roman', serif">Georgia</option>
+            <option value="Verdana, sans-serif">Verdana</option>
+            <option value="Tahoma, sans-serif">Tahoma</option>
+          </select>
+        </div>
+      </div>
+    </fieldset>
+
+    <div class="muted-note">Seus dados ficam salvos apenas no seu navegador (localStorage) para não se perderem ao recarregar a página. Nada é enviado para nenhum servidor.</div>
+  </div>
+
+  <!-- PREVIEW -->
+  <div>
+    <div class="panel">
+      <div class="preview-header">
+        <h2>Preview</h2>
+        <div class="actions">
+          <button class="btn" id="btn-copy">Copiar assinatura</button>
+          <button class="btn secondary" id="btn-download">Baixar .html</button>
+          <button class="btn secondary" id="btn-reset">Limpar dados</button>
+        </div>
+      </div>
+      <div id="status-msg"></div>
+      <div class="preview-frame">
+        <div id="signature-output"></div>
+      </div>
+    </div>
+
+    <div class="panel steps">
+      <b>Como colar no Gmail</b>
+      <ol>
+        <li>Clique em <b>"Copiar assinatura"</b> acima.</li>
+        <li>No Gmail, vá em <b>Configurações</b> (ícone de engrenagem) → <b>Ver todas as configurações</b>.</li>
+        <li>Na aba <b>Geral</b>, encontre a seção <b>Assinatura</b> e clique em <b>Criar nova</b> (ou selecione uma existente).</li>
+        <li>Clique dentro da caixa de assinatura e pressione <b>Ctrl+V</b> (ou Cmd+V no Mac) para colar.</li>
+        <li>Role até o fim da página e clique em <b>Salvar alterações</b>.</li>
+      </ol>
+    </div>
+  </div>
+
+</div>
+
+<footer>Gerador local — nenhum dado sai do seu navegador.</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  var ids = ["f-name","f-title","f-company","f-phone","f-mobile","f-email","f-website","f-address",
+    "f-linkedin","f-instagram","f-x","f-youtube","f-photo-url","f-color","f-font"];
+  var STORAGE_KEY = "gmailSigGenState";
+
+  function $(id){ return document.getElementById(id); }
+
+  function escapeHtml(str){
+    if(!str) return "";
+    return str.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+  }
+
+  function currentTemplate(){
+    var r = document.querySelector('input[name="template"]:checked');
+    return r ? r.value : "classic";
+  }
+
+  function currentPhotoMode(){
+    var r = document.querySelector('input[name="photo-mode"]:checked');
+    return r ? r.value : "url";
+  }
+
+  var uploadedDataUrl = "";
+
+  function getPhotoSrc(){
+    var mode = currentPhotoMode();
+    if(mode === "upload"){
+      return uploadedDataUrl || "";
+    }
+    return $("f-photo-url").value.trim();
+  }
+
+  // ---- social icon cell (email-safe: colored table cell with letter, no external images) ----
+  function socialIcon(label, url, bg){
+    if(!url) return "";
+    var safeUrl = escapeHtml(url);
+    return (
+      '<a href="' + safeUrl + '" target="_blank" style="text-decoration:none;display:inline-block;margin-right:6px;">' +
+        '<span style="display:inline-block;width:22px;height:22px;line-height:22px;text-align:center;' +
+        'border-radius:50%;background:' + bg + ';color:#ffffff;font-family:Arial,sans-serif;font-size:11px;' +
+        'font-weight:bold;">' + label + '</span>' +
+      '</a>'
+    );
+  }
+
+  function buildSocialRow(){
+    var linkedin = $("f-linkedin").value.trim();
+    var instagram = $("f-instagram").value.trim();
+    var x = $("f-x").value.trim();
+    var youtube = $("f-youtube").value.trim();
+
+    var html = "";
+    html += socialIcon("in", linkedin, "#0A66C2");
+    html += socialIcon("ig", instagram, "#C13584");
+    html += socialIcon("X", x, "#000000");
+    html += socialIcon("yt", youtube, "#FF0000");
+    return html;
+  }
+
+  function buildContactLines(color, font){
+    var phone = $("f-phone").value.trim();
+    var mobile = $("f-mobile").value.trim();
+    var email = $("f-email").value.trim();
+    var website = $("f-website").value.trim();
+    var address = $("f-address").value.trim();
+
+    var lines = [];
+    if(phone) lines.push('<span style="color:' + color + ';font-weight:bold;">Tel:</span> ' + escapeHtml(phone));
+    if(mobile) lines.push('<span style="color:' + color + ';font-weight:bold;">Cel:</span> ' + escapeHtml(mobile));
+    if(email) lines.push('<span style="color:' + color + ';font-weight:bold;">Email:</span> <a href="mailto:' + escapeHtml(email) + '" style="color:' + color + ';text-decoration:none;">' + escapeHtml(email) + '</a>');
+    if(website) lines.push('<span style="color:' + color + ';font-weight:bold;">Site:</span> <a href="' + escapeHtml(website) + '" style="color:' + color + ';text-decoration:none;" target="_blank">' + escapeHtml(website.replace(/^https?:\/\//,"")) + '</a>');
+    if(address) lines.push(escapeHtml(address));
+
+    if(lines.length === 0) return "";
+
+    return lines.map(function(l){
+      return '<tr><td style="font-family:' + font + ';font-size:12px;color:#444444;padding:1px 0;line-height:18px;">' + l + '</td></tr>';
+    }).join("");
+  }
+
+  function buildSignatureHtml(){
+    var name = $("f-name").value.trim() || "Seu Nome";
+    var title = $("f-title").value.trim();
+    var company = $("f-company").value.trim();
+    var color = $("f-color").value || "#2563eb";
+    var font = $("f-font").value;
+    var template = currentTemplate();
+    var photoSrc = getPhotoSrc();
+
+    var titleLine = [title, company].filter(Boolean).join(" — ");
+    var contactRows = buildContactLines(color, font);
+    var socialRow = buildSocialRow();
+
+    var photoCell = "";
+    if(template !== "compact" && photoSrc){
+      photoCell =
+        '<td style="padding-right:16px;vertical-align:top;">' +
+          '<img src="' + escapeHtml(photoSrc) + '" width="100" height="100" alt="' + escapeHtml(name) + '" ' +
+          'style="width:100px;height:100px;border-radius:' + (template === "modern" ? "8px" : "50%") + ';object-fit:cover;display:block;border:0;">' +
+        '</td>';
+    }
+
+    var topBar = "";
+    if(template === "modern"){
+      topBar = '<tr><td colspan="2" style="border-top:3px solid ' + color + ';padding-top:10px;"></td></tr>';
+    }
+
+    var infoCell =
+      '<td style="vertical-align:top;">' +
+        '<table cellpadding="0" cellspacing="0" border="0">' +
+          '<tr><td style="font-family:' + font + ';font-size:16px;font-weight:bold;color:#1a1a1a;padding-bottom:2px;">' + escapeHtml(name) + '</td></tr>' +
+          (titleLine ? '<tr><td style="font-family:' + font + ';font-size:13px;color:' + color + ';font-weight:bold;padding-bottom:8px;">' + escapeHtml(titleLine) + '</td></tr>' : '') +
+          contactRows +
+          (socialRow ? '<tr><td style="padding-top:8px;">' + socialRow + '</td></tr>' : '') +
+        '</table>' +
+      '</td>';
+
+    var html =
+      '<table cellpadding="0" cellspacing="0" border="0" style="font-family:' + font + ';border-collapse:collapse;">' +
+        topBar +
+        '<tr>' + photoCell + infoCell + '</tr>' +
+      '</table>';
+
+    return html;
+  }
+
+  function render(){
+    var html = buildSignatureHtml();
+    $("signature-output").innerHTML = html;
+    saveState();
+  }
+
+  function saveState(){
+    var state = {};
+    ids.forEach(function(id){ state[id] = $(id).value; });
+    state.template = currentTemplate();
+    state.photoMode = currentPhotoMode();
+    state.uploadedDataUrl = uploadedDataUrl;
+    try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }catch(e){}
+  }
+
+  function loadState(){
+    var raw;
+    try{ raw = localStorage.getItem(STORAGE_KEY); }catch(e){ raw = null; }
+    if(!raw) return;
+    try{
+      var state = JSON.parse(raw);
+      ids.forEach(function(id){
+        if(state[id] !== undefined) $(id).value = state[id];
+      });
+      if(state.template){
+        var el = document.querySelector('input[name="template"][value="' + state.template + '"]');
+        if(el) el.checked = true;
+      }
+      if(state.photoMode){
+        var el2 = document.querySelector('input[name="photo-mode"][value="' + state.photoMode + '"]');
+        if(el2) el2.checked = true;
+        togglePhotoMode();
+      }
+      if(state.uploadedDataUrl){
+        uploadedDataUrl = state.uploadedDataUrl;
+        var img = $("photo-preview-img");
+        img.src = uploadedDataUrl;
+        img.style.display = "inline-block";
+      }
+    }catch(e){}
+  }
+
+  function togglePhotoMode(){
+    var mode = currentPhotoMode();
+    $("photo-url-field").style.display = mode === "url" ? "block" : "none";
+    $("photo-upload-field").style.display = mode === "upload" ? "block" : "none";
+  }
+
+  // ---- detect temporary/signed photo URLs (e.g. LinkedIn's media.licdn.com links expire) ----
+  function isTemporaryPhotoUrl(url){
+    if(!url) return false;
+    try{
+      var u = new URL(url);
+      if(/(^|\.)licdn\.com$/i.test(u.hostname)) return true;
+      return false;
+    }catch(e){
+      return false;
+    }
+  }
+
+  function checkPhotoUrlWarning(){
+    var url = $("f-photo-url").value.trim();
+    $("linkedin-warning").style.display = isTemporaryPhotoUrl(url) ? "block" : "none";
+  }
+
+  function convertUrlToPermanent(){
+    var url = $("f-photo-url").value.trim();
+    if(!url) return;
+    setStatus("Tentando baixar a imagem...");
+    fetch(url, { mode: "cors" })
+      .then(function(res){
+        if(!res.ok) throw new Error("bad response");
+        return res.blob();
+      })
+      .then(function(blob){
+        resizeImageToDataUrl(blob, 200, function(dataUrl){
+          if(!dataUrl){
+            setStatus("");
+            alert("Não foi possível processar a imagem baixada. Tente a opção \"Enviar arquivo\" manualmente.");
+            return;
+          }
+          var uploadRadio = document.querySelector('input[name="photo-mode"][value="upload"]');
+          uploadRadio.checked = true;
+          togglePhotoMode();
+          applyUploadedImage(dataUrl);
+          setStatus("Imagem convertida e embutida com sucesso! Agora ela não depende mais do link do LinkedIn.");
+        });
+      })
+      .catch(function(){
+        setStatus("");
+        alert(
+          "Não foi possível baixar a imagem automaticamente (o LinkedIn bloqueia esse tipo de acesso pelo navegador).\n\n" +
+          "Alternativa manual: abra a foto em outra aba, clique com o botão direito → \"Salvar imagem como\", " +
+          "e depois use a opção \"Enviar arquivo\" aqui no gerador para embuti-la permanentemente."
+        );
+      });
+  }
+
+  function setStatus(msg){
+    $("status-msg").textContent = msg;
+    if(msg){
+      setTimeout(function(){ $("status-msg").textContent = ""; }, 3000);
+    }
+  }
+
+  // ---- copy to clipboard (rich HTML) ----
+  function copySignature(){
+    var container = $("signature-output");
+    var htmlContent = container.innerHTML;
+    var plainText = container.innerText;
+
+    if(navigator.clipboard && window.ClipboardItem){
+      try{
+        var htmlBlob = new Blob([htmlContent], { type: "text/html" });
+        var textBlob = new Blob([plainText], { type: "text/plain" });
+        var item = new ClipboardItem({ "text/html": htmlBlob, "text/plain": textBlob });
+        navigator.clipboard.write([item]).then(function(){
+          setStatus("Assinatura copiada! Cole no editor de assinatura do Gmail (Ctrl+V).");
+        }).catch(function(){
+          fallbackCopy(container);
+        });
+        return;
+      }catch(e){
+        fallbackCopy(container);
+        return;
+      }
+    }
+    fallbackCopy(container);
+  }
+
+  function fallbackCopy(container){
+    var range = document.createRange();
+    range.selectNodeContents(container);
+    var sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+    try{
+      var ok = document.execCommand("copy");
+      setStatus(ok ? "Assinatura copiada! Cole no editor de assinatura do Gmail (Ctrl+V)." : "Não foi possível copiar automaticamente. Selecione o texto acima e use Ctrl+C.");
+    }catch(e){
+      setStatus("Não foi possível copiar automaticamente. Selecione o texto acima e use Ctrl+C.");
+    }
+    sel.removeAllRanges();
+  }
+
+  function downloadSignature(){
+    var html = buildSignatureHtml();
+    var full = "<!DOCTYPE html>\n<html><head><meta charset=\"UTF-8\"><title>Assinatura de Email</title></head><body>\n" + html + "\n</body></html>";
+    var blob = new Blob([full], { type: "text/html" });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url;
+    a.download = "assinatura-email.html";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    setStatus("Arquivo baixado.");
+  }
+
+  function resetAll(){
+    if(!confirm("Limpar todos os campos preenchidos?")) return;
+    try{ localStorage.removeItem(STORAGE_KEY); }catch(e){}
+    ids.forEach(function(id){ $(id).value = ""; });
+    $("f-color").value = "#2563eb";
+    uploadedDataUrl = "";
+    $("photo-preview-img").style.display = "none";
+    $("photo-preview-img").src = "";
+    $("f-photo-file").value = "";
+    updateColorHex();
+    render();
+  }
+
+  function updateColorHex(){
+    $("color-hex").textContent = $("f-color").value;
+  }
+
+  // ---- resize/crop any local image (File or Blob) to a small square JPEG before embedding ----
+  // Keeps embedded signature photos to a few KB instead of hundreds of KB.
+  function resizeImageToDataUrl(fileOrBlob, maxSize, callback){
+    var objectUrl = URL.createObjectURL(fileOrBlob);
+    var img = new Image();
+    img.onload = function(){
+      var sw = img.naturalWidth, sh = img.naturalHeight;
+      var side = Math.min(sw, sh);
+      var sx = (sw - side) / 2, sy = (sh - side) / 2;
+      var canvas = document.createElement("canvas");
+      canvas.width = maxSize;
+      canvas.height = maxSize;
+      var ctx = canvas.getContext("2d");
+      ctx.drawImage(img, sx, sy, side, side, 0, 0, maxSize, maxSize);
+      URL.revokeObjectURL(objectUrl);
+      var dataUrl;
+      try{
+        dataUrl = canvas.toDataURL("image/jpeg", 0.85);
+      }catch(e){
+        dataUrl = null;
+      }
+      callback(dataUrl);
+    };
+    img.onerror = function(){
+      URL.revokeObjectURL(objectUrl);
+      callback(null);
+    };
+    img.src = objectUrl;
+  }
+
+  function applyUploadedImage(dataUrl){
+    uploadedDataUrl = dataUrl;
+    var img = $("photo-preview-img");
+    img.src = uploadedDataUrl;
+    img.style.display = "inline-block";
+    render();
+  }
+
+  function handleFileUpload(e){
+    var file = e.target.files && e.target.files[0];
+    if(!file) return;
+    resizeImageToDataUrl(file, 200, function(dataUrl){
+      if(dataUrl){
+        applyUploadedImage(dataUrl);
+      }else{
+        // fallback: embed original file untouched if resizing fails for any reason
+        var reader = new FileReader();
+        reader.onload = function(ev){ applyUploadedImage(ev.target.result); };
+        reader.readAsDataURL(file);
+      }
+    });
+  }
+
+  // ---- wire up events ----
+  document.addEventListener("DOMContentLoaded", function(){
+    ids.forEach(function(id){
+      $(id).addEventListener("input", render);
+    });
+    document.querySelectorAll('input[name="template"]').forEach(function(el){
+      el.addEventListener("change", render);
+    });
+    document.querySelectorAll('input[name="photo-mode"]').forEach(function(el){
+      el.addEventListener("change", function(){ togglePhotoMode(); render(); });
+    });
+    $("f-photo-file").addEventListener("change", handleFileUpload);
+    $("f-photo-url").addEventListener("input", checkPhotoUrlWarning);
+    $("btn-convert-linkedin").addEventListener("click", convertUrlToPermanent);
+    $("f-color").addEventListener("input", function(){ updateColorHex(); render(); });
+    $("btn-copy").addEventListener("click", copySignature);
+    $("btn-download").addEventListener("click", downloadSignature);
+    $("btn-reset").addEventListener("click", resetAll);
+
+    loadState();
+    togglePhotoMode();
+    updateColorHex();
+    checkPhotoUrlWarning();
+    render();
+  });
+})();
+</script>
+
+</body>
+</html>
