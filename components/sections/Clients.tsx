@@ -8,6 +8,7 @@ import { t } from '@/lib/translations';
 const logos = [
   { name: '360 Pay',           file: '360-pay-vid.svg',        ext: 'svg'  },
   { name: 'Acquira',           file: 'acquira.svg',             ext: 'svg'  },
+  { name: 'Beonflow',          file: 'beonflow.png',            ext: 'png'  },
   { name: 'Club Med',          file: 'clubmed.svg',             ext: 'svg'  },
   { name: 'Correio Braziliense', file: 'correio-braziliense.svg', ext: 'svg' },
   { name: 'Cultura Pop',       file: 'culturapop.svg',          ext: 'svg'  },
